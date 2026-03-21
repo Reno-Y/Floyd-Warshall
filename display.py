@@ -39,7 +39,7 @@ def display_matrix(L, P, n, matrix_type="L"):
                     formatted = str(int(cell_value))
             else:  # matrix_type == "P"
                 if cell_value == -1:
-                    formatted = "-1"
+                    formatted = "-"
                 else:
                     formatted = str(cell_value)
             

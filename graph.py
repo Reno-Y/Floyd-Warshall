@@ -59,14 +59,18 @@ def load_graph(filepath):
 def get_available_graphs(graphs_dir="graphs"):
     """
     Liste les graphes disponibles dans le répertoire.
+    Trie les graphes numériquement (graph1, graph2, ..., graph10, graph11)
+    et non alphabétiquement (graph1, graph10, graph11, graph2, ...).
 
     Args:
         graphs_dir (str): Répertoire contenant les fichiers graphes
 
     Returns:
-        list: Liste des fichiers graphes disponibles
+        list: Liste des fichiers graphes disponibles triés numériquement
     """
     import os
+    import re
+
     graphs = []
     try:
         for filename in os.listdir(graphs_dir):
@@ -75,5 +79,71 @@ def get_available_graphs(graphs_dir="graphs"):
     except FileNotFoundError:
         print(f"Erreur : Le répertoire '{graphs_dir}' n'existe pas.")
 
-    return sorted(graphs)
+    # Trier numériquement : extraire le numéro du graphe
+    def extract_graph_number(item):
+        filename = item[0]
+        # Extraire le numéro après "graph" et avant ".txt"
+        match = re.search(r'graph(\d+)', filename)
+        if match:
+            return int(match.group(1))
+        return float('inf')  # Mettre les fichiers sans numéro à la fin
 
+    return sorted(graphs, key=extract_graph_number)
+
+
+def list_graphs_direct():
+    """
+    Liste les graphes disponibles directement avec affichage formaté.
+    Utile pour déboguer les problèmes de tri et de disponibilité.
+
+    Returns:
+        list: Liste des graphes triés numériquement
+    """
+    import os
+    import re
+
+    graphs_dir = "graphs"
+    graphs = []
+
+    for filename in os.listdir(graphs_dir):
+        if filename.endswith(".txt"):
+            graphs.append((filename, os.path.join(graphs_dir, filename)))
+
+    def extract_graph_number(item):
+        filename = item[0]
+        match = re.search(r'graph(\d+)', filename)
+        if match:
+            return int(match.group(1))
+        return float('inf')
+
+    sorted_graphs = sorted(graphs, key=extract_graph_number)
+
+    print(f"\nTotal : {len(sorted_graphs)} graphes\n")
+    print("Graphes disponibles :")
+    for i, (name, path) in enumerate(sorted_graphs):
+        print(f"  {i+1}. {name}")
+
+    return sorted_graphs
+
+
+def display_available_graphs(graphs_dir="graphs"):
+    """
+    Affiche la liste des graphes disponibles de manière formatée.
+
+    Args:
+        graphs_dir (str): Répertoire contenant les fichiers graphes
+    """
+    graphs = get_available_graphs(graphs_dir)
+
+    if not graphs:
+        print("Aucun graphe disponible dans le répertoire 'graphs/'.")
+        return
+
+    print("\n" + "="*60)
+    print("GRAPHES DISPONIBLES")
+    print("="*60)
+
+    for idx, (name, _) in enumerate(graphs, 1):
+        print(f"  {idx}. {name}")
+
+    print("="*60 + "\n")

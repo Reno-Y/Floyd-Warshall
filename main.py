@@ -98,12 +98,12 @@ def analyze_graph(filepath, graph_name, log_file):
 
     if has_negative_cycle:
         negative_vertices = get_negative_cycles(L, n)
-        print(f"⚠️  AVERTISSEMENT : Un circuit absorbant (cycle négatif) a été détecté !")
+        print(f"[WARN] Un circuit absorbant (cycle négatif) a été détecté !")
         print(f"Sommets impliqués : {negative_vertices}")
         print(f"\nImpossible d'afficher les chemins minimaux.")
         return
     else:
-        print("✓ Aucun circuit absorbant détecté.")
+        print("[OK] Aucun circuit absorbant détecté.")
         print(f"\nLes chemins minimaux sont valides.\n")
 
     # Proposer l'affichage interactif des chemins
